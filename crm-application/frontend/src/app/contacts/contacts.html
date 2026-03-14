@@ -39,31 +39,6 @@
 
 <div class="contacts-table-container">
   <h2>All Contacts</h2>
-  @if (contactsGet$ | async; as contacts) {
-    @if (contacts.length > 0) {
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (contact of contacts; track contact.id) {
-            <tr>
-              <td>{{ contact.id }}</td>
-              <td>{{ contact.name }}</td>
-              <td>{{ contact.email }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <p>No contacts found.</p>
-    }
-  }
-
     @if (contacts$ | async; as contacts) {
     @if (contacts.length > 0) {
       <table>

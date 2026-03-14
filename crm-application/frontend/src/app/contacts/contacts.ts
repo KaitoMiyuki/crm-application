@@ -5,7 +5,7 @@ import { environment } from 'frontend/environment';
 import { Contact } from '@crm-application/shared';
 import { Observable } from 'rxjs/internal/Observable';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-contacts',
@@ -17,11 +17,13 @@ export class Contacts {
   private httpService = inject(HttpClient);
 
   contactForm: FormGroup;
-  contactsSubject$: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
-  contacts$: Observable<Contact[]> = this.contactsSubject$.asObservable();
-  contactsGet$: Observable<Contact[]> = this.httpService.get<Contact[]>(`${environment.apiUrl}/contacts`).pipe(
-    tap((contacts) => this.contactsSubject$.next(contacts))
+
+  private refresh$ = new BehaviorSubject<void>(undefined);
+
+  contacts$ = this.refresh$.pipe(
+    switchMap(() => this.httpService.get<Contact[]>(`${environment.apiUrl}/contacts`))
   );
+  
   
   constructor(private fb: FormBuilder) {
     this.contactForm = this.fb.group({
@@ -32,12 +34,10 @@ export class Contacts {
 
   onSubmit(): void {
     if (this.contactForm.valid) {
-      this.httpService.post(`${environment.apiUrl}/contacts`, this.contactForm.value).pipe(
-        tap((value) => {
-          this.contactsSubject$.next([...this.contactsSubject$.value, value]);
-        })
+      this.httpService.post(`${environment.apiUrl}/contacts`, this.contactForm.value
       ).subscribe(() => {
         this.contactForm.reset();
+        this.refresh$.next();
       });
     }
   }

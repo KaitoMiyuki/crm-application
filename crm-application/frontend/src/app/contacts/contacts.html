@@ -1,0 +1,91 @@
+<div class="contact-form-container">
+  <h2>Add Contact</h2>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Enter full name"
+      />
+      @if (contactForm.get('name')?.invalid && contactForm.get('name')?.touched) {
+        <span class="error">Name is required.</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Enter email address"
+      />
+      @if (contactForm.get('email')?.errors?.['required'] && contactForm.get('email')?.touched) {
+        <span class="error">Email is required.</span>
+      }
+      @if (contactForm.get('email')?.errors?.['email'] && contactForm.get('email')?.touched) {
+        <span class="error">Please enter a valid email address.</span>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="contactForm.invalid">Save Contact</button>
+      <button type="button" (click)="onReset()">Reset</button>
+    </div>
+  </form>
+</div>
+
+<div class="contacts-table-container">
+  <h2>All Contacts</h2>
+  @if (contactsGet$ | async; as contacts) {
+    @if (contacts.length > 0) {
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contact of contacts; track contact.id) {
+            <tr>
+              <td>{{ contact.id }}</td>
+              <td>{{ contact.name }}</td>
+              <td>{{ contact.email }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p>No contacts found.</p>
+    }
+  }
+
+    @if (contacts$ | async; as contacts) {
+    @if (contacts.length > 0) {
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contact of contacts; track contact.id) {
+            <tr>
+              <td>{{ contact.id }}</td>
+              <td>{{ contact.name }}</td>
+              <td>{{ contact.email }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p>No contacts found.</p>
+    }
+  }
+</div>

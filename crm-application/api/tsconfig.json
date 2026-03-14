@@ -10,7 +10,7 @@
       "path": "./tsconfig.spec.json"
     }
   ],
-  "compilerOptions": {
-    "esModuleInterop": true
-  }
+  // "compilerOptions": {
+  //   "esModuleInterop": true
+  // }
 }

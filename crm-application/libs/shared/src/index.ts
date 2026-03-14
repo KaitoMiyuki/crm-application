@@ -1,2 +1,2 @@
 export * from './lib/shared';
-export * from './models/customer';
+export * from './models/contact';
